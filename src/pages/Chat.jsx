@@ -21,7 +21,7 @@ export default function Chat() {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [profileUser, setProfileUser] = useState(null);
     const [showMembers, setShowMembers] = useState(false);
-    const [showSidebar, setShowSidebar] = useState(false); // ← mobile sidebar
+    const [showSidebar, setShowSidebar] = useState(false);
 
     const handleMessage = useCallback((msg) => {
         setMessages((prev) => [...prev, msg]);
@@ -99,9 +99,12 @@ export default function Chat() {
         setSelectedRoom(room);
         setMessages([]);
         setTypingUser(null);
-        setShowSidebar(false); // ← mobile pe sidebar band karo
+        setShowSidebar(false);
+        setShowMembers(false);
         try {
-            await api.post(`/api/rooms/${room.id}/join`);
+            if (room.roomType === "GROUP") {
+                await api.post(`/api/rooms/${room.id}/join`);
+            }
             const res = await api.get(`/api/messages/${room.id}`);
             setMessages(res.data);
         } catch (err) { console.error(err); }
@@ -117,7 +120,7 @@ export default function Chat() {
             });
             handleSelectRoom(room);
         } catch (err) {
-            // toast.error("DM open karne mein error!");
+            console.error(err);
         }
     };
 
@@ -136,10 +139,14 @@ export default function Chat() {
     const handleSend = (content, fileData) => sendMessage(content, fileData);
 
     return (
-        <div className="flex h-screen overflow-hidden relative"
-            style={{ background: "var(--bg-primary)" }}>
+        // ← 100dvh — mobile browser bar ke saath sahi height
+        <div className="flex overflow-hidden relative"
+            style={{
+                height: "100dvh",
+                background: "var(--bg-primary)"
+            }}>
 
-            {/* Mobile Overlay — sidebar ke peeche */}
+            {/* Mobile Overlay */}
             {showSidebar && (
                 <div
                     className="fixed inset-0 z-20 md:hidden"
@@ -150,10 +157,10 @@ export default function Chat() {
 
             {/* Sidebar */}
             <div className={`
-                fixed md:relative z-30 md:z-auto h-full
+                fixed md:relative z-30 md:z-auto
                 transition-transform duration-300 ease-in-out
                 ${showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-            `}>
+            `} style={{ height: "100dvh" }}>
                 <Sidebar
                     groupRooms={groupRooms}
                     directRooms={directRooms}
@@ -167,50 +174,52 @@ export default function Chat() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
                 {/* Mobile Header */}
-                <div className="md:hidden flex items-center gap-3 px-4 py-3 flex-shrink-0"
+                <div className="md:hidden flex items-center gap-3 px-4 flex-shrink-0"
                     style={{
+                        height: "56px",
                         background: "var(--bg-secondary)",
                         borderBottom: "1px solid var(--border)"
                     }}>
-                    {/* Hamburger */}
                     <button
                         onClick={() => setShowSidebar(true)}
                         className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                         style={{ background: "rgba(255,255,255,0.06)" }}>
-                        <div className="flex flex-col gap-1">
-                            <div className="w-4 h-0.5 rounded-full bg-current"
-                                style={{ color: "var(--text-primary)" }} />
+                        <div className="flex flex-col gap-1.5">
                             <div className="w-4 h-0.5 rounded-full"
                                 style={{ background: "var(--text-primary)" }} />
                             <div className="w-4 h-0.5 rounded-full"
+                                style={{ background: "var(--text-primary)" }} />
+                            <div className="w-3 h-0.5 rounded-full"
                                 style={{ background: "var(--text-primary)" }} />
                         </div>
                     </button>
 
-                    {/* LinkUp Logo */}
-                    <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
                             style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}>
-                            <span className="text-sm">🔗</span>
+                            <span className="text-sm">
+                                {selectedRoom?.roomType === "DIRECT" ? "💬" : "🔗"}
+                            </span>
                         </div>
-                        <span className="font-bold text-sm"
+                        <span className="font-semibold text-sm truncate"
                             style={{ color: "var(--text-primary)" }}>
                             {selectedRoom
                                 ? (selectedRoom.roomType === "DIRECT"
-                                    ? selectedRoom.name?.replace(user?.name + " & ", "").replace(" & " + user?.name, "")
+                                    ? selectedRoom.name
+                                        ?.replace(user?.name + " & ", "")
+                                        .replace(" & " + user?.name, "")
                                     : `#${selectedRoom.name}`)
                                 : "LinkUp"}
                         </span>
                     </div>
 
-                    {/* Members toggle — sirf GROUP pe */}
                     {selectedRoom?.roomType === "GROUP" && (
                         <button
                             onClick={() => setShowMembers(!showMembers)}
-                            className="ml-auto w-9 h-9 rounded-xl flex items-center justify-center"
+                            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                             style={{
                                 background: showMembers
                                     ? "rgba(99,102,241,0.2)"
@@ -221,7 +230,7 @@ export default function Chat() {
                     )}
                 </div>
 
-                {/* Chat + Members */}
+                {/* Chat + Members — flex-1 fills remaining height */}
                 <div className="flex-1 flex overflow-hidden min-h-0">
                     <div className="flex-1 flex flex-col overflow-hidden min-w-0">
                         <ChatWindow
@@ -242,10 +251,8 @@ export default function Chat() {
                         />
                     </div>
 
-                    {/* Members Panel */}
                     {showMembers && selectedRoom?.roomType === "GROUP" && (
-                        <div className="fixed md:relative inset-y-0 right-0 z-30 md:z-auto
-                                        h-full md:h-auto">
+                        <div className="fixed md:relative inset-y-0 right-0 z-30 md:z-auto h-full">
                             <MembersPanel
                                 room={selectedRoom}
                                 allUsers={allUsers}
