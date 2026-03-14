@@ -12,7 +12,10 @@ export function useWebSocket(
         if (!token || !roomId) return;
 
         const client = new Client({
-            webSocketFactory: () => new window.SockJS("http://localhost:8080/ws"),
+            webSocketFactory: () => {
+                const wsUrl = import.meta.env.VITE_WS_URL || 'http://localhost:8080';
+                return new window.SockJS(`${wsUrl}/ws`);
+            },
             connectHeaders: {
                 Authorization: `Bearer ${token}`,
             },

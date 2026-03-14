@@ -335,7 +335,7 @@ export default function Login() {
                                     <div className="flex-1 h-px" style={{ background: "var(--border)" }} />
                                 </div>
 
-                                <a href="http://localhost:8080/oauth2/authorization/google"
+                                <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/oauth2/authorization/google`}
                                     className="w-full flex items-center justify-center gap-3 py-3.5
                                                rounded-2xl text-sm font-medium transition-all"
                                     style={{

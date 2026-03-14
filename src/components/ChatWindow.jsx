@@ -5,7 +5,7 @@ export default function ChatWindow({ messages, typingUser, room,
     currentUser, onToggleMembers, showMembers, onProfileClick, onEditMessage, onDeleteMessage }) {
     const { user } = useAuth();
     const bottomRef = useRef(null);
-
+    const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
     // State — kaun sa message edit mode mein hai
     // ChatWindow ke andar add karo
     const [editingId, setEditingId] = useState(null);
@@ -342,7 +342,7 @@ export default function ChatWindow({ messages, typingUser, room,
                                                     <div className="mb-2">
                                                         {msg.fileType === "image" ? (
                                                             <img
-                                                                src={`http://localhost:8080${msg.fileUrl}`}
+                                                                src={`${BASE_URL}${msg.fileUrl}`}
                                                                 alt={msg.fileName}
                                                                 className="max-w-xs rounded-2xl cursor-pointer"
                                                                 style={{
@@ -351,12 +351,12 @@ export default function ChatWindow({ messages, typingUser, room,
                                                                     maxHeight: "200px",
                                                                 }}
                                                                 onClick={() => window.open(
-                                                                    `http://localhost:8080${msg.fileUrl}`, "_blank"
+                                                                    `${BASE_URL}${msg.fileUrl}`, "_blank"
                                                                 )}
                                                             />
                                                         ) : msg.fileType === "video" ? (
                                                             <video
-                                                                src={`http://localhost:8080${msg.fileUrl}`}
+                                                                src={`${BASE_URL}${msg.fileUrl}`}
                                                                 controls
                                                                 className="max-w-xs rounded-2xl"
                                                                 style={{
@@ -366,7 +366,7 @@ export default function ChatWindow({ messages, typingUser, room,
                                                             />
                                                         ) : (
                                                             <a
-                                                                href={`http://localhost:8080${msg.fileUrl}`}
+                                                                href={`${BASE_URL}${msg.fileUrl}`}
                                                                 target="_blank"
                                                                 rel="noreferrer"
                                                                 className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm"
