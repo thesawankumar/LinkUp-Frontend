@@ -384,13 +384,17 @@ export default function ChatWindow({ messages, typingUser, room,
                                     )}
 
                                     {/* Time */}
+                                    {/* Time */}
                                     {showTime && editingId !== msg.id && (
                                         <span className="text-xs mt-1 mx-1"
                                             style={{ color: "var(--text-muted)" }}>
                                             {msg.sentAt
-                                                ? new Date(msg.sentAt).toLocaleTimeString("en-IN", {
-                                                    hour: "2-digit", minute: "2-digit"
-                                                })
+                                                ? new Date(msg.sentAt + 'Z')  // ← 'Z' add karo — UTC batata hai
+                                                    .toLocaleTimeString("en-IN", {
+                                                        hour: "2-digit",
+                                                        minute: "2-digit",
+                                                        timeZone: "Asia/Kolkata"  // ← IST timezone
+                                                    })
                                                 : "now"}
                                         </span>
                                     )}
