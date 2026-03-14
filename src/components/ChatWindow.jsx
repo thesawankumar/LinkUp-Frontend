@@ -188,8 +188,8 @@ export default function ChatWindow({ messages, typingUser, room,
                                 </div>
 
                                 {/* Bubble */}
-                                <div className={`flex flex-col max-w-sm lg:max-w-md
-                                                 ${isMe ? "items-end" : "items-start"}`}>
+                                <div className={`flex flex-col  w-full max-w-[75vw] sm:max-w-sm lg:max-w-md
+                 ${isMe ? "items-end" : "items-start"}`}>
 
                                     {/* Sender Name */}
                                     {!isMe && showAvatar && room?.roomType === "GROUP" && (
@@ -235,49 +235,90 @@ export default function ChatWindow({ messages, typingUser, room,
                                         <div className="relative">
 
                                             {/* Hover Buttons — sirf apne msgs pe */}
-                                            {/* Hover Actions */}
                                             {isMe && (
-                                                <div className="absolute -top-7 right-0
-                                                    opacity-0 group-hover:opacity-100
-                                                    transition-all duration-200
-                                                    flex items-center gap-1 z-10">
-                                                    {/* Edit */}
-                                                    <button
-                                                        onClick={() => {
-                                                            setEditingId(msg.id);
-                                                            setEditContent(msg.content);
-                                                        }}
-                                                        className="w-7 h-7 rounded-lg flex items-center justify-center
-                       text-xs transition-all"
-                                                        title="Edit"
-                                                        style={{
-                                                            background: "rgba(99,102,241,0.15)",
-                                                            color: "var(--accent-light)",
-                                                            border: "1px solid rgba(99,102,241,0.2)"
-                                                        }}
-                                                        onMouseOver={(e) => e.currentTarget.style.background = "rgba(99,102,241,0.3)"}
-                                                        onMouseOut={(e) => e.currentTarget.style.background = "rgba(99,102,241,0.15)"}>
-                                                        ✏️
-                                                    </button>
+                                                <div
+                                                    className="absolute -top-4 -left-20
+                   opacity-0 group-hover:opacity-100
+                   transition-all duration-200 scale-95
+                   group-hover:scale-100
+                   flex items-center z-20"
+                                                    style={{
+                                                        filter: "drop-shadow(0 4px 16px rgba(0,0,0,0.4))"
+                                                    }}>
 
-                                                    {/* Delete */}
-                                                    <button
-                                                        onClick={() => setDeleteConfirmId(msg.id)}
-                                                        className="w-7 h-7 rounded-lg flex items-center justify-center
-                       text-xs transition-all"
-                                                        title="Delete"
+                                                    {/* Pill container */}
+                                                    <div className="flex items-center rounded-2xl overflow-hidden"
                                                         style={{
-                                                            background: "rgba(239,68,68,0.12)",
-                                                            color: "#f87171",
-                                                            border: "1px solid rgba(239,68,68,0.2)"
-                                                        }}
-                                                        onMouseOver={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.25)"}
-                                                        onMouseOut={(e) => e.currentTarget.style.background = "rgba(239,68,68,0.12)"}>
-                                                        🗑️
-                                                    </button>
+                                                            background: "rgba(18,18,30,0.95)",
+                                                            border: "1px solid rgba(255,255,255,0.08)",
+                                                            backdropFilter: "blur(12px)",
+                                                        }}>
+
+                                                        {/* Edit button */}
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingId(msg.id);
+                                                                setEditContent(msg.content);
+                                                            }}
+                                                            className="group/btn flex items-center gap-1.5 px-3 py-2
+                           transition-all duration-150 relative"
+                                                            style={{ color: "rgba(255,255,255,0.45)" }}
+                                                            onMouseOver={(e) => {
+                                                                e.currentTarget.style.background = "rgba(99,102,241,0.15)";
+                                                                e.currentTarget.style.color = "#a5b4fc";
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.currentTarget.style.background = "transparent";
+                                                                e.currentTarget.style.color = "rgba(255,255,255,0.45)";
+                                                            }}>
+                                                            <svg width="13" height="13" viewBox="0 0 24 24"
+                                                                fill="none" stroke="currentColor"
+                                                                strokeWidth="2.5" strokeLinecap="round">
+                                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                            </svg>
+                                                            <span className="text-xs font-medium">Edit</span>
+                                                        </button>
+
+                                                        {/* Divider */}
+                                                        <div className="w-px h-5 self-center"
+                                                            style={{ background: "rgba(255,255,255,0.06)" }} />
+
+                                                        {/* Delete button */}
+                                                        <button
+                                                            onClick={() => setDeleteConfirmId(msg.id)}
+                                                            className="flex items-center gap-1.5 px-3 py-2
+                           transition-all duration-150"
+                                                            style={{ color: "rgba(255,255,255,0.45)" }}
+                                                            onMouseOver={(e) => {
+                                                                e.currentTarget.style.background = "rgba(239,68,68,0.12)";
+                                                                e.currentTarget.style.color = "#fca5a5";
+                                                            }}
+                                                            onMouseOut={(e) => {
+                                                                e.currentTarget.style.background = "transparent";
+                                                                e.currentTarget.style.color = "rgba(255,255,255,0.45)";
+                                                            }}>
+                                                            <svg width="13" height="13" viewBox="0 0 24 24"
+                                                                fill="none" stroke="currentColor"
+                                                                strokeWidth="2.5" strokeLinecap="round">
+                                                                <polyline points="3 6 5 6 21 6" />
+                                                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                                                <path d="M10 11v6M14 11v6" />
+                                                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                                            </svg>
+                                                            <span className="text-xs font-medium">Delete</span>
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Arrow pointing right */}
+                                                    <div className="w-2 h-2 rotate-45 -ml-1 flex-shrink-0"
+                                                        style={{
+                                                            background: "rgba(18,18,30,0.95)",
+                                                            borderRight: "1px solid rgba(255,255,255,0.08)",
+                                                            borderTop: "1px solid rgba(255,255,255,0.08)",
+                                                        }} />
                                                 </div>
                                             )}
-
                                             {/* Message Bubble */}
                                             <div className="px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
                                                 style={isMe ? {
@@ -291,11 +332,52 @@ export default function ChatWindow({ messages, typingUser, room,
                                                     border: "1px solid var(--border)",
                                                     borderBottomLeftRadius: showTime ? "4px" : "18px"
                                                 }}>
-                                                {msg.content}
+                                                {msg.content && <span>{msg.content}</span>}
                                                 {msg.edited && (
                                                     <span className="text-xs ml-2 opacity-60">
                                                         (edited)
                                                     </span>
+                                                )}
+                                                {msg.fileUrl && (
+                                                    <div className="mb-2">
+                                                        {msg.fileType === "image" ? (
+                                                            <img
+                                                                src={`http://localhost:8080${msg.fileUrl}`}
+                                                                alt={msg.fileName}
+                                                                className="max-w-xs rounded-2xl cursor-pointer"
+                                                                style={{
+                                                                    maxHeight: "300px", objectFit: "cover", maxWidth: "min(280px, 60vw)", width: "100%",
+                                                                    display: "block",  // ← mobile pe 60vw max
+                                                                    maxHeight: "200px",
+                                                                }}
+                                                                onClick={() => window.open(
+                                                                    `http://localhost:8080${msg.fileUrl}`, "_blank"
+                                                                )}
+                                                            />
+                                                        ) : msg.fileType === "video" ? (
+                                                            <video
+                                                                src={`http://localhost:8080${msg.fileUrl}`}
+                                                                controls
+                                                                className="max-w-xs rounded-2xl"
+                                                                style={{
+                                                                    maxHeight: "300px", maxWidth: "min(280px, 60vw)", width: "100%",
+                                                                    display: "block"
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <a
+                                                                href={`http://localhost:8080${msg.fileUrl}`}
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                                className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm"
+                                                                style={{
+                                                                    background: "rgba(255,255,255,0.1)",
+                                                                    color: "var(--text-primary)"
+                                                                }}>
+                                                                📎 {msg.fileName}
+                                                            </a>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>
@@ -410,6 +492,6 @@ export default function ChatWindow({ messages, typingUser, room,
 
                 <div ref={bottomRef} />
             </div>
-        </div>
+        </div >
     );
 }

@@ -117,7 +117,7 @@ export default function Chat() {
             });
             handleSelectRoom(room);
         } catch (err) {
-            toast.error("DM open karne mein error!");
+            // toast.error("DM open karne mein error!");
         }
     };
 
@@ -133,7 +133,7 @@ export default function Chat() {
         }
     };
 
-    const handleSend = (content) => sendMessage(content);
+    const handleSend = (content, fileData) => sendMessage(content, fileData);
 
     return (
         <div className="flex h-screen overflow-hidden relative"

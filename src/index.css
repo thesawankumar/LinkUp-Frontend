@@ -33,7 +33,12 @@ body {
   color: var(--text-primary);
   overflow: hidden;
 }
-
+.group:hover .group-hover\:scale-100 {
+    transform: scale(1);
+}
+.scale-95 {
+    transform: scale(0.95);
+}
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }

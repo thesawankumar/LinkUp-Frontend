@@ -55,11 +55,16 @@ export function useWebSocket(
 
     }, [token, roomId]); // ← sirf yahi 2 dependencies
 
-    const sendMessage = (content) => {
+    const sendMessage = (content, fileData = null) => {
         if (!clientRef.current?.connected) return;
         clientRef.current.publish({
             destination: `/app/chat.sendMessage/${roomId}`,
-            body: JSON.stringify({ content }),
+            body: JSON.stringify({
+                content,
+                fileUrl: fileData?.fileUrl || null,
+                fileType: fileData?.fileType || null,
+                fileName: fileData?.fileName || null,
+            }),
         });
     };
 
